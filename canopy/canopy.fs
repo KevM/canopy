@@ -544,8 +544,10 @@ let start b =
             new OpenQA.Selenium.Firefox.FirefoxDriver() :> IWebDriver
         | FirefoxWithProfile profile -> 
             new OpenQA.Selenium.Firefox.FirefoxDriver(profile) :> IWebDriver
-        | PhantomJS -> 
-            new OpenQA.Selenium.PhantomJS.PhantomJSDriver(phantomJSDir) :> IWebDriver
+        | PhantomJS ->
+            let service = OpenQA.Selenium.PhantomJS.PhantomJSDriverService.CreateDefaultService(phantomJSDir)
+            service.ProxyType <- "none"
+            new OpenQA.Selenium.PhantomJS.PhantomJSDriver(service) :> IWebDriver
 
     if autoPinBrowserRightOnLaunch = true then pin Right
     browsers <- browsers @ [browser]
