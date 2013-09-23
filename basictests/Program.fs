@@ -246,12 +246,23 @@ test (fun _ ->
     url testpage
     on testpage
 
-"Navigating to a url with query string should be on url with and without a query string" &&& fun _ ->
+"Navigating to a url with query string should be on url with and without a query string and with only the path" &&& fun _ ->
     let testpageWithQueryString = testpage + "?param1=weeeee"
-    let subtestpage = "http://lefthandedgoat.github.io/canopy"
     url testpageWithQueryString
     on testpageWithQueryString //with query string
     on testpage //without query string
+
+"Should be on a non absolute url" &&&& fun _ ->
+    let testpageWithQueryString = testpage + "?param1=weeeee"
+    url testpageWithQueryString
+
+    let path = (new System.UriBuilder(testpage)).Path
+    on path
+
+    //ensure all permutations of missing leading and trailing slashes work
+    on (path.TrimStart('/'))
+    on (path.TrimEnd('/'))
+    on (path.Trim('/'))
 
 "Should not be on partial url" &&& fun _ ->
     url testpage
